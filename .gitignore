@@ -1,0 +1,12 @@
+*.class
+*.log
+/.metadata/
+.classpath
+.settings/
+.project
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar
