@@ -8,6 +8,7 @@ using namespace std;
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
     queue<int> q;
+    
     for(int i=0;i<progresses.size();i++){
         int day = (100-progresses[i])/speeds[i] + ((100-progresses[i]) % speeds[i] != 0);
         q.push(day);
