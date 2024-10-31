@@ -15,9 +15,9 @@ public class Solution2_1 {
 
     public static int[] solution(int[] fees, String[] records){
         int[] answer = {};
-        //주차한 차들의 번호화 시간
+        //주차한 차 번호와 입차시간(입출차 데이터 저장/삭제)
         Map<String, Integer> parking = new HashMap<String, Integer>();
-        //차들의 번호와 누적된 요금(트리맵으로 차량번호(키)기준으로 오름차순)
+        //차 번호와 누적된 시간(트리맵으로 차량번호(키)기준으로 오름차순)
         Map<String, Integer> costs = new TreeMap<String, Integer>();
 
         int baseTime = fees[0];
@@ -31,27 +31,27 @@ public class Solution2_1 {
             String carNum = arr[1];
             String io = arr[2];
 
-            if(io.equals("IN")){
+            if(io.equals("IN")){ // 입차
                 parking.put(carNum,time);
-            }else{
-                int carTime = parking.get(carNum);
+            }else if(io.equals("OUT")){  // 출차
+                int inTime = parking.get(carNum);
                 parking.remove(carNum);
                 if(costs.containsKey(carNum)){
-                    int carTime2 = costs.get(carNum);
-                    costs.replace(carNum,carTime2 + time - carTime);
+                    int aTime = costs.get(carNum);
+                    costs.replace(carNum,aTime + time - inTime);
                 }else {
-                    costs.put(carNum, time - carTime);
+                    costs.put(carNum, time - inTime);
                 }
             }
         }
         int lastTime = 1439;
-        for(String car : parking.keySet()){
-            int carTime = parking.get(car);
+        for(String car : parking.keySet()){ //출차하지 못한 차 누적 시간 계산
+            int inTime = parking.get(car);
             if(costs.containsKey(car)){
-                int carTime2 = costs.get(car);
-                costs.replace(car, carTime2 + lastTime - carTime);
+                int aTime = costs.get(car);
+                costs.replace(car, aTime + lastTime - inTime);
             }else{
-                costs.put(car, lastTime - carTime);
+                costs.put(car, lastTime - inTime);
             }
         }
         Object[] key = costs.keySet().toArray();
@@ -62,6 +62,7 @@ public class Solution2_1 {
             String car = String.valueOf(key[i]);
 
             int val = costs.get(car);
+            
             if(val > baseTime){
                 result = (int)(baseFee + Math.ceil((double)(val-baseTime)/partTime)*partFee);
             }
